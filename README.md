@@ -1,2 +1,7 @@
 # cppobserver
-generic observer pattern
+generic observer pattern in c++
+
+
+
+
+
