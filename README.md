@@ -1,0 +1,2 @@
+# cppobserver
+generic observer pattern
