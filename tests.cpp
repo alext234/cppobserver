@@ -116,9 +116,58 @@ TEST(CPP_OBSERVER, registerAndNotifyMultipleEvent ) {
 }
 
 
+class SubjectMulti:  public ObservedSubject<TestEvent1>, public ObservedSubject<TestEvent2>{
+public:
+	void notifyEvent1 (const TestEvent1 & event) { 
+		::ObservedSubject<TestEvent1>::notifyObservers(event);
+	}
+	void notifyEvent2 (const TestEvent2 & event) { 
+		::ObservedSubject<TestEvent2>::notifyObservers(event);
+	}
+};
+class Observer1: public AbstractObserver<TestEvent1> {
+public: 
+	Observer1() : _receivedEventId{0} {}
+	void onNotified(const TestEvent1& event) override {
+		_receivedEventId = event._eventId;
+	}
+	int _receivedEventId;
+};
+class Observer2: public AbstractObserver<TestEvent2> {
+public: 
+	Observer2() : _receivedEventId{0} {}
+	void onNotified(const TestEvent2& event) override {
+		_receivedEventId = event._eventId;
+	}
+	int _receivedEventId;
+};
+
+
 TEST(CPP_OBSERVER, subjectSupportsMultipleEvents ) {
 
-	// TODO: 
+	SubjectMulti subject;
+	Observer1 observer1;
+	Observer2 observer2;
+
+	subject.ObservedSubject<TestEvent1>::registerObserver (&observer1);
+	subject.ObservedSubject<TestEvent2>::registerObserver (&observer2);
+
+
+	std::srand(std::time(0));
+	const int TEST_EVENT_ID1 = std::rand();
+	const int TEST_EVENT_ID2 = std::rand();
+
+	TestEvent1 event1{TEST_EVENT_ID1};
+	TestEvent2 event2{TEST_EVENT_ID2};
+
+	subject.notifyEvent1(event1);
+	subject.notifyEvent2(event2);
+	ASSERT_THAT (observer1._receivedEventId, Eq(TEST_EVENT_ID1));
+	ASSERT_THAT (observer2._receivedEventId, Eq(TEST_EVENT_ID2));
+
+
+	
+
 }
 
 
