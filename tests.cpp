@@ -36,9 +36,27 @@ TEST(CPP_OBSERVER, registerAndNotify ) {
 	TestEvent event{TEST_EVENT_ID};
 	subject.notify(event);
 	EXPECT_THAT (observer._receivedEventId, Eq(TEST_EVENT_ID));
+	
+	
+}
+
+TEST(CPP_OBSERVER, registerAndDeregister ) {
+	Subject subject;
+	Observer observer;
+	subject.registerObserver (&observer);
+	std::srand(std::time(0));
+	const int TEST_EVENT_ID = std::rand();
+	subject.notify(TestEvent{TEST_EVENT_ID});
+	EXPECT_THAT (observer._receivedEventId, Eq(TEST_EVENT_ID));
+
+	subject.deregisterObserver (&observer);
+	observer._receivedEventId=0;	
+	subject.notify(TestEvent{TEST_EVENT_ID});
+	EXPECT_THAT (observer._receivedEventId, Ne(TEST_EVENT_ID));
 
 	
 }
+
 struct TestEvent1 {
 	TestEvent1(int eventId) : _eventId{eventId} {}
 	int _eventId;
@@ -96,15 +114,13 @@ TEST(CPP_OBSERVER, registerAndNotifyMultipleEvent ) {
 
 	
 }
-TEST(CPP_OBSERVER, multipleRegisterAndNotify ) {
-	// TODO: multiple registered observer should receive notification
 
-	// TODO: at least 1 normal function and 1 lambda
+
+TEST(CPP_OBSERVER, subjectSupportsMultipleEvents ) {
+
+	// TODO: 
 }
 
-TEST(CPP_OBSERVER, registerAndDeregister ) {
-	// TODO: register and then deregister -> should not receive any notify
-}
 
 TEST(CPP_OBSERVER, registeredObserverIsFreedWithoutDeregister ) {
 	// TODO: a registered observed is freed and not deregistered
