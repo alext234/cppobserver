@@ -12,18 +12,28 @@ public:
 
 template <typename Event>
 class Observable{
-using ObsEventPtr = AbstractObserver<Event>*;
+using ObsEventPtr = std::weak_ptr<AbstractObserver<Event>>;
 public:
 	void registerObserver (ObsEventPtr ob){
 		_observers.push_back (ob);
 	}
 	void deregisterObserver (ObsEventPtr ob){
-		_observers.erase( std::remove (_observers.begin(), _observers.end(), ob), _observers.end());
-		
+		for (auto it = _observers.begin(); it !=_observers.end (); ) {
+			
+			auto obs = (*it).lock();
+			if (obs) {
+				if (obs.get()==ob.lock().get()) {
+					_observers.erase (it);
+				} else ++it;
+			} else ++it;
+		}
 	}
 	void notifyObservers(const Event& event){
 		for (auto it = _observers.begin(); it !=_observers.end (); ++it) {
-			(*it)->onNotified (event);
+			auto obs = (*it).lock();
+			if (obs) {
+				obs->onNotified (event);
+			}
 			
 		}
 

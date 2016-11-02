@@ -29,30 +29,31 @@ public:
 
 TEST(CPP_OBSERVER, registerAndNotify ) {
 	Subject subject;
-	Observer observer;
-	subject.registerObserver (&observer);
+	auto observer=make_shared<Observer> ();
+
+	subject.registerObserver (observer);
 	std::srand(std::time(0));
 	const int TEST_EVENT_ID = std::rand();
 	TestEvent event{TEST_EVENT_ID};
 	subject.notify(event);
-	EXPECT_THAT (observer._receivedEventId, Eq(TEST_EVENT_ID));
+	EXPECT_THAT (observer->_receivedEventId, Eq(TEST_EVENT_ID));
 	
 	
 }
 
 TEST(CPP_OBSERVER, registerAndDeregister ) {
 	Subject subject;
-	Observer observer;
-	subject.registerObserver (&observer);
+	auto observer = make_shared<Observer> ();
+	subject.registerObserver (observer);
 	std::srand(std::time(0));
 	const int TEST_EVENT_ID = std::rand();
 	subject.notify(TestEvent{TEST_EVENT_ID});
-	EXPECT_THAT (observer._receivedEventId, Eq(TEST_EVENT_ID));
+	EXPECT_THAT (observer->_receivedEventId, Eq(TEST_EVENT_ID));
 
-	subject.deregisterObserver (&observer);
-	observer._receivedEventId=0;	
+	subject.deregisterObserver (observer);
+	observer->_receivedEventId=0;	
 	subject.notify(TestEvent{TEST_EVENT_ID});
-	EXPECT_THAT (observer._receivedEventId, Ne(TEST_EVENT_ID));
+	EXPECT_THAT (observer->_receivedEventId, Ne(TEST_EVENT_ID));
 
 	
 }
@@ -96,9 +97,9 @@ public:
 TEST(CPP_OBSERVER, registerAndNotifyMultipleEvent ) {
 	Subject1 subject1;
 	Subject2 subject2;
-	ObserverMulti observer;
-	subject1.registerObserver (&observer);
-	subject2.registerObserver (&observer);
+	auto observer = make_shared<ObserverMulti> ();
+	subject1.registerObserver (observer);
+	subject2.registerObserver (observer);
 
 	std::srand(std::time(0));
 	const int TEST_EVENT_ID1 = std::rand();
@@ -109,8 +110,8 @@ TEST(CPP_OBSERVER, registerAndNotifyMultipleEvent ) {
 
 	subject1.notify(event1);
 	subject2.notify(event2);
-	EXPECT_THAT (observer._receivedEventId1, Eq(TEST_EVENT_ID1));
-	EXPECT_THAT (observer._receivedEventId2, Eq(TEST_EVENT_ID2));
+	EXPECT_THAT (observer->_receivedEventId1, Eq(TEST_EVENT_ID1));
+	EXPECT_THAT (observer->_receivedEventId2, Eq(TEST_EVENT_ID2));
 
 	
 }
@@ -146,11 +147,11 @@ public:
 TEST(CPP_OBSERVER, subjectSupportsMultipleEvents ) {
 
 	SubjectMulti subject;
-	Observer1 observer1;
-	Observer2 observer2;
+	auto observer1=make_shared<Observer1>();
+	auto observer2= make_shared<Observer2>();
 
-	subject.Observable<TestEvent1>::registerObserver (&observer1);
-	subject.Observable<TestEvent2>::registerObserver (&observer2);
+	subject.Observable<TestEvent1>::registerObserver (observer1);
+	subject.Observable<TestEvent2>::registerObserver (observer2);
 
 
 	std::srand(std::time(0));
@@ -162,8 +163,8 @@ TEST(CPP_OBSERVER, subjectSupportsMultipleEvents ) {
 
 	subject.notifyEvent1(event1);
 	subject.notifyEvent2(event2);
-	ASSERT_THAT (observer1._receivedEventId, Eq(TEST_EVENT_ID1));
-	ASSERT_THAT (observer2._receivedEventId, Eq(TEST_EVENT_ID2));
+	ASSERT_THAT (observer1->_receivedEventId, Eq(TEST_EVENT_ID1));
+	ASSERT_THAT (observer2->_receivedEventId, Eq(TEST_EVENT_ID2));
 
 
 	
@@ -172,7 +173,17 @@ TEST(CPP_OBSERVER, subjectSupportsMultipleEvents ) {
 
 
 TEST(CPP_OBSERVER, registeredObserverIsFreedWithoutDeregister ) {
-	// TODO: a registered observed is freed and not deregistered
+
+	Subject subject;
+	shared_ptr<Observer> observer (new Observer());
+	subject.registerObserver (observer);
+	std::srand(std::time(0));
+	const int TEST_EVENT_ID = std::rand();
+	observer.reset();
+
+	subject.notify(TestEvent{TEST_EVENT_ID});
+	// should not have any seg fault!
+
 }
 
 int main(int argc, char *argv[])
