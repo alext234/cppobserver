@@ -12,20 +12,19 @@ public:
 
 template <typename Event>
 class Observable{
-using ObsEventPtr = std::shared_ptr<AbstractObserver<Event>>;
-using EventFunc = std::function<void(const Event&)>;
+using CallableFunc = std::function<void(const Event&)>;
 public:
 	
-	void registerObserver (ObsEventPtr ob){
+	void registerObserver (std::shared_ptr<AbstractObserver<Event>> ob){
 		_observers.push_back (ob);
 	}
-	void registerObserver (EventFunc callable){
+	void registerObserver (CallableFunc callable){
 		struct CallableWrapper: public AbstractObserver<Event> {
-			CallableWrapper(EventFunc func):_callable{func} {}
+			CallableWrapper(CallableFunc func):_callable{func} {}
 			void onNotified (const Event& event) override {
 				_callable(event);	
 			}
-			EventFunc _callable;
+			CallableFunc _callable;
 		};
 
 		auto observer = std::make_shared<CallableWrapper>(callable);
@@ -34,7 +33,7 @@ public:
 		registerObserver(observer);
 	}
 
-	void deregisterObserver (ObsEventPtr ob){
+	void deregisterObserver (std::shared_ptr<AbstractObserver<Event>> ob){
 		for (auto it = _observers.begin(); it !=_observers.end (); ) {
 			
 			auto obs = (*it).lock();
