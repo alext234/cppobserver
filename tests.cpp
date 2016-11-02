@@ -186,6 +186,35 @@ TEST(CPP_OBSERVER, registeredObserverIsFreedWithoutDeregister ) {
 
 }
 
+using EventFunc = std::function<void(const TestEvent&)>;
+	struct CallableWrapper: public AbstractObserver<TestEvent> {
+			CallableWrapper(EventFunc func):_callable{func} {
+			}
+			void onNotified (const TestEvent& event) override {
+				_callable(event);	
+			}
+			EventFunc _callable;
+		};
+
+
+TEST(CPP_OBSERVER, registerLambda) {
+
+
+	Subject subject;
+	int receivedEventId=0; // to be updated from lambda
+
+	auto callable = [&receivedEventId](const TestEvent& event)->void{
+		receivedEventId = event._eventId;
+	};
+	subject.registerObserver (callable);
+
+	std::srand(std::time(0));
+	const int TEST_EVENT_ID = std::rand();
+	subject.notify(TestEvent{TEST_EVENT_ID});
+
+	EXPECT_THAT (receivedEventId, Eq(TEST_EVENT_ID));
+}
+
 int main(int argc, char *argv[])
 {
 	testing::InitGoogleMock (&argc, argv);
