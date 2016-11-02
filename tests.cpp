@@ -11,7 +11,7 @@ struct TestEvent {
 	int _eventId;
 };
 
-class Subject: public ObservedSubject<TestEvent> {
+class Subject: public Observable<TestEvent> {
 public:
 	void notify (const TestEvent & event) { 
 		notifyObservers(event);
@@ -66,14 +66,14 @@ struct TestEvent2 {
 	int _eventId;
 };
 
-class Subject1: public ObservedSubject<TestEvent1> {
+class Subject1: public Observable<TestEvent1> {
 public:
 	void notify (const TestEvent1 & event) { 
 		notifyObservers(event);
 	}
 };
 
-class Subject2: public ObservedSubject<TestEvent2> {
+class Subject2: public Observable<TestEvent2> {
 public:
 	void notify (const TestEvent2 & event) { 
 		notifyObservers(event);
@@ -116,13 +116,13 @@ TEST(CPP_OBSERVER, registerAndNotifyMultipleEvent ) {
 }
 
 
-class SubjectMulti:  public ObservedSubject<TestEvent1>, public ObservedSubject<TestEvent2>{
+class SubjectMulti:  public Observable<TestEvent1>, public Observable<TestEvent2>{
 public:
 	void notifyEvent1 (const TestEvent1 & event) { 
-		::ObservedSubject<TestEvent1>::notifyObservers(event);
+		::Observable<TestEvent1>::notifyObservers(event);
 	}
 	void notifyEvent2 (const TestEvent2 & event) { 
-		::ObservedSubject<TestEvent2>::notifyObservers(event);
+		::Observable<TestEvent2>::notifyObservers(event);
 	}
 };
 class Observer1: public AbstractObserver<TestEvent1> {
@@ -149,8 +149,8 @@ TEST(CPP_OBSERVER, subjectSupportsMultipleEvents ) {
 	Observer1 observer1;
 	Observer2 observer2;
 
-	subject.ObservedSubject<TestEvent1>::registerObserver (&observer1);
-	subject.ObservedSubject<TestEvent2>::registerObserver (&observer2);
+	subject.Observable<TestEvent1>::registerObserver (&observer1);
+	subject.Observable<TestEvent2>::registerObserver (&observer2);
 
 
 	std::srand(std::time(0));

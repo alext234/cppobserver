@@ -11,7 +11,7 @@ public:
 
 
 template <typename Event>
-class ObservedSubject{
+class Observable{
 using ObsEventPtr = AbstractObserver<Event>*;
 public:
 	void registerObserver (ObsEventPtr ob){
@@ -21,7 +21,6 @@ public:
 		_observers.erase( std::remove (_observers.begin(), _observers.end(), ob), _observers.end());
 		
 	}
-protected: 
 	void notifyObservers(const Event& event){
 		for (auto it = _observers.begin(); it !=_observers.end (); ++it) {
 			(*it)->onNotified (event);
