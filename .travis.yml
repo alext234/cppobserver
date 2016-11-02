@@ -42,6 +42,12 @@ before_install:
   - sudo apt-get update -qq
 # Build steps
 script:
+  - cd googletest
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_CXX_COMPILER=$COMPILER .. && make
+  - cd ..
+  - cd ..
   - mkdir build
   - cd build
   - cmake -DCMAKE_CXX_COMPILER=$COMPILER .. && make
