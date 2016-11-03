@@ -1,6 +1,7 @@
 #ifndef __CPP_OBSERVER__
 #define __CPP_OBSERVER__
 #include <memory>
+#include <vector>
 
 template <typename Event>
 class AbstractObserver {
