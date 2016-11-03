@@ -46,3 +46,22 @@ int main (int argc, char* argv[]) {
     a->doSomeWorkAndNotify();
 }
 ```
+
+
+
+To build:
+```
+mkdir build
+cd build
+cmake ..
+make
+```
+
+To run tests and examples:
+
+```
+from  build directory:
+./runtests
+
+./examples/simple_observer 
+```
