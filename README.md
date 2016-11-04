@@ -49,7 +49,17 @@ int main (int argc, char* argv[]) {
 
 
 
-To build:
+## build tests and examples
+- First build googletest
+```
+- cd googletest
+- mkdir build
+- cd build
+- cmake ..
+- make
+- cd ..
+```
+- Build tests and examples 
 ```
 mkdir build
 cd build
@@ -57,7 +67,7 @@ cmake ..
 make
 ```
 
-To run tests and examples:
+- Run tests and examples:
 
 ```
 from  build directory:
