@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/networkshark/cppobserver.svg?branch=master)](https://travis-ci.org/networkshark/cppobserver)
+[![Build Status](https://travis-ci.org/alext234/cppobserver.svg?branch=master)](https://travis-ci.org/alext234/cppobserver)
 
 # cppobserver
 Generic observer pattern in c++.
