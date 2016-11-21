@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(cppobserver)
+add_subdirectory(googletest)
 
 set(GOOGLETEST ${CMAKE_SOURCE_DIR}/googletest/)  
 include_directories(${GOOGLETEST}/googlemock/include ${GOOGLETEST}/googletest/include)
