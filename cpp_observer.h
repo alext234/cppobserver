@@ -56,7 +56,7 @@ public:
 
 	}
 
-private:
+protected:
 	std::vector<std::weak_ptr<AbstractObserver<Event>> >  _observers;
 	std::vector<std::shared_ptr<AbstractObserver<Event>> >  _observersFromLambda; // as a place holder to keep these objects alive (i.e. from killing away by smartpointer)
 };
